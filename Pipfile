@@ -8,6 +8,7 @@ requests = "*"
 fire = "*"
 ipython = "*"
 beautifulsoup4 = "*"
+markdownify = "*"
 
 [dev-packages]
 

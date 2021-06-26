@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 import fire
 import requests
 from bs4 import BeautifulSoup
+from markdownify import markdownify
 
 BASE_URL = 'https://adventofcode.com'
 
@@ -55,12 +56,14 @@ class AdventOfCode(object):
             with open(input_file, 'w+') as f:
                 f.write(self.session.get(input_url).text)
 
-        puzzle_file = f'{base_dir}/puzzle.html'
         input_url = f'https://adventofcode.com/{year}/day/{day}'
-        with open(puzzle_file, 'w+') as f:
-            puzzle_content = self.session.get(input_url).text
-            soup = BeautifulSoup(puzzle_content, features='html.parser')
-            f.write('<p>'.join([str(i) for i in soup.find_all('article')]))
+        puzzle_content = self.session.get(input_url).text
+        soup = BeautifulSoup(puzzle_content, features='html.parser')
+        stripped_puzzle_content = '<p>'.join([str(i) for i in soup.find_all('article')])
+        with open(f'{base_dir}/puzzle.html', 'w+') as f:
+            f.write(stripped_puzzle_content)
+        with open(f'{base_dir}/puzzle.md', 'w+') as f:
+            f.write(markdownify(stripped_puzzle_content))
 
         solution_file = f'{base_dir}/solution.py'
         if not os.path.exists(solution_file):
